@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
 import {
-  Alert,
   Keyboard,
   StyleSheet,
   TouchableWithoutFeedback,
@@ -10,6 +9,10 @@ import {
 import Form from './components/Form';
 import Weather from './components/Weather';
 import {KELVIN_DEGREES} from './constants';
+import utils from './utils';
+import config from './config';
+
+const {showNotFoundResults} = utils;
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useState({
@@ -25,8 +28,7 @@ const App = () => {
   useEffect(() => {
     const verifyWeather = async () => {
       if (consultWeather) {
-        const appId = 'f4724b3520be5275668b4a50823c1799';
-        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${appId}`;
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${config.API_KEY}`;
 
         try {
           const response = await fetch(url);
@@ -34,7 +36,7 @@ const App = () => {
           setWeatherResult(result);
           setConsultWeather(false);
 
-          // this modifies the background colors based on temperature
+          // this modifies the background colors according to the temperature of a city
           const {main} = result;
           const actual = main.temp - KELVIN_DEGREES;
 
@@ -46,18 +48,12 @@ const App = () => {
             setBgcolor('rgb( 178, 28, 61)');
           }
         } catch (error) {
-          showAlert();
+          showNotFoundResults();
         }
       }
     };
     verifyWeather();
   }, [city, consultWeather, country]);
-
-  const showAlert = () => {
-    Alert.alert('Error', 'No results, try another city or country', [
-      {text: 'OK '},
-    ]);
-  };
 
   const hideKeyBoard = () => {
     Keyboard.dismiss();
