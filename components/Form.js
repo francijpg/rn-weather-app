@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {
-  Alert,
   Animated,
   StyleSheet,
   Text,
@@ -9,6 +8,9 @@ import {
   View,
 } from 'react-native';
 import {Picker} from '@react-native-community/picker';
+import utils from '../utils';
+
+const {showRequiredFields} = utils;
 
 const Form = ({searchTerm, setSearchTerm, setConsultWeather}) => {
   const {city, country} = searchTerm;
@@ -16,7 +18,7 @@ const Form = ({searchTerm, setSearchTerm, setConsultWeather}) => {
 
   const checkWeather = () => {
     if (!city.length || !country.length) {
-      showAlertRequiredFields();
+      showRequiredFields();
       return;
     }
     setConsultWeather(true);
@@ -40,14 +42,6 @@ const Form = ({searchTerm, setSearchTerm, setConsultWeather}) => {
 
   const animationStyle = {
     transform: [{scale: buttonAnimation}],
-  };
-
-  const showAlertRequiredFields = () => {
-    Alert.alert(
-      'Error',
-      'Please. Add a city and country before to start the search',
-      [{text: 'Agreed '}],
-    );
   };
 
   return (
